@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify'
-import { createUserController } from './controllers/createUser'
+import { createUserController } from './controllers/create-user'
+import { authenticateUserController } from './controllers/authenticate-user'
 // import { checkUserIdExists } from './middlewares/check-user-id-exists'
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/users', createUserController)
+  app.post('/sessions', authenticateUserController)
 }
 
 //, { preHandler: [checkUserIdExists] }
