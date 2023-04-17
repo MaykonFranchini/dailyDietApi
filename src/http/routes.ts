@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { createUserController } from './controllers/register'
+import { createUserController } from './controllers/createUser'
 // import { checkUserIdExists } from './middlewares/check-user-id-exists'
 
 export async function appRoutes(app: FastifyInstance) {
