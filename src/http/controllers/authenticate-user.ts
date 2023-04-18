@@ -27,6 +27,12 @@ export async function authenticateUserController(
       email,
       password,
     })
+
+    reply.cookie('user_id', id, {
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    })
+
     return reply.status(200).send({ name, validEmail, id, created_at })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {

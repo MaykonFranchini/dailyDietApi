@@ -20,7 +20,12 @@ export async function createUserController(
   try {
     const userRepository = new PrismaUsersRepository()
     const createUserUseCase = new CreateUserUseCase(userRepository)
-    await createUserUseCase.execute({ name, email, password })
+    const { user } = await createUserUseCase.execute({ name, email, password })
+
+    reply.cookie('user_id', user.id, {
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    })
   } catch (err) {
     if (err instanceof UserAlreadyexistsError) {
       return reply.status(409).send({ message: err.message })
