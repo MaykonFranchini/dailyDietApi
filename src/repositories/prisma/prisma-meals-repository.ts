@@ -7,6 +7,15 @@ export interface CreateMeal extends Prisma.MealCreateInput {
 }
 
 export class PrismaMealsRepository implements MealsRepository {
+  async listAll(user_id: string | undefined) {
+    const meals = prisma.meal.findMany({
+      where: {
+        user_id,
+      },
+    })
+    return meals
+  }
+
   async create(data: CreateMeal) {
     const meal = await prisma.meal.create({
       data: {

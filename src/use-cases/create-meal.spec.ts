@@ -11,7 +11,7 @@ describe('Create user use case', () => {
     sut = new CreateMealUseCase(mealRepository)
   })
 
-  it('should be able to create a user', async () => {
+  it('should be able to create a meal', async () => {
     const { meal } = await sut.execute({
       name: 'Meal',
       description: 'Meal test',
