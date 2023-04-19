@@ -8,7 +8,8 @@
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
     "vitest": "vitest run",
-    "vitest:watch": "vitest"
+    "vitest:watch": "vitest",
+    "eslint": "npx eslint --fix src --ext .ts"
   },
   "keywords": [],
   "author": "",

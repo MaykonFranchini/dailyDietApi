@@ -2,8 +2,12 @@ import { Prisma } from '@prisma/client'
 import { MealsRepository } from '../meals-repository'
 import { prisma } from '../../services/prisma'
 
+export interface CreateMeal extends Prisma.MealCreateInput {
+  user_id: string
+}
+
 export class PrismaMealsRepository implements MealsRepository {
-  async create(data: Prisma.MealCreateInput) {
+  async create(data: CreateMeal) {
     const meal = await prisma.meal.create({
       data: {
         name: data.name,

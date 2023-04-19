@@ -21,6 +21,9 @@ export class CreateMealUseCase {
     is_on_diet,
     user_id,
   }: CreateMealUseCaseRequest): Promise<CreateMealUseCaseResponse> {
+    if (!user_id) {
+      throw new Error('Missing user id.')
+    }
     const meal = await this.mealRepository.create({
       name,
       description,
