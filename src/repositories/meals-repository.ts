@@ -9,4 +9,5 @@ export interface MealsRepository {
   create(data: Prisma.MealCreateInput): Promise<Meal>
   listAll(user_id: string | undefined): Promise<Meal[]>
   findUnique({ id, user_id }: FindMeal): Promise<Meal | undefined>
+  delete({ id, user_id }: FindMeal): Promise<void>
 }

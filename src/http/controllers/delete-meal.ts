@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { PrismaMealsRepository } from '../../repositories/prisma/prisma-meals-repository'
-import { FindMealUseCase } from '../../use-cases/find-meal'
+import { DeleteMealUseCase } from '../../use-cases/delete-meal'
 import { z } from 'zod'
 
-export async function findMealController(
+export async function deleteMealController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
@@ -14,16 +14,18 @@ export async function findMealController(
   const { id } = findMealRouteParamsSchema.parse(request.params)
 
   const { user_id } = request.cookies
-  let meal
 
   try {
     const mealRepository = new PrismaMealsRepository()
-    const findMealUseCase = new FindMealUseCase(mealRepository)
+    const deleteMealUseCase = new DeleteMealUseCase(mealRepository)
 
-    meal = await findMealUseCase.execute({ user_id, id })
+    await deleteMealUseCase.execute({ user_id, id })
   } catch (err) {
-    return reply.status(404).send()
+    console.error({
+      err,
+    })
+    reply.status(404).send()
   }
 
-  reply.status(200).send(meal)
+  return reply.status(204).send('Meal deleted successfully')
 }

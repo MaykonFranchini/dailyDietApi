@@ -6,6 +6,18 @@ import { ResourceNotFoundError } from '../../use-cases/errors/resource-not-found
 export class InMemoryMealsRepository implements MealsRepository {
   public items: Meal[] = []
 
+  delete({ id, user_id }: FindMeal): Promise<void> {
+    const mealIndex = this.items.findIndex(
+      (meal) => meal.id === id && meal.user_id === user_id,
+    )
+
+    if (mealIndex > -1) {
+      this.items.splice(mealIndex, 1)
+    }
+
+    throw new ResourceNotFoundError()
+  }
+
   async findUnique({ id, user_id }: FindMeal) {
     const meal = this.items.find(
       (item) => item.id === id && item.user_id === user_id,
