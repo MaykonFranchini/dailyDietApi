@@ -7,7 +7,7 @@ let mealRepository: InMemoryMealsRepository
 let sut: ListAllMealsUseCase
 let auxUseCase: CreateMealUseCase
 
-describe('Create user use case', () => {
+describe('List allmeals use case', () => {
   beforeEach(() => {
     mealRepository = new InMemoryMealsRepository()
     auxUseCase = new CreateMealUseCase(mealRepository)

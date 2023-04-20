@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { MealsRepository } from '../meals-repository'
+import { FindMeal, MealsRepository } from '../meals-repository'
 import { prisma } from '../../services/prisma'
 
 export interface CreateMeal extends Prisma.MealCreateInput {
@@ -7,8 +7,21 @@ export interface CreateMeal extends Prisma.MealCreateInput {
 }
 
 export class PrismaMealsRepository implements MealsRepository {
+  async findUnique({ id, user_id }: FindMeal) {
+    const meal = await prisma.meal.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+
+    if (!meal || meal.user_id !== user_id) {
+      throw new Error('Meal not found')
+    }
+    return meal
+  }
+
   async listAll(user_id: string | undefined) {
-    const meals = prisma.meal.findMany({
+    const meals = await prisma.meal.findMany({
       where: {
         user_id,
       },
