@@ -7,18 +7,42 @@ export interface CreateMeal extends Prisma.MealCreateInput {
   user_id: string
 }
 
+export interface UpdateMeal extends Prisma.MealUpdateInput {
+  user_id: string | undefined
+  id: string
+}
+
 export class PrismaMealsRepository implements MealsRepository {
+  async update(data: UpdateMeal) {
+    const meal = await prisma.meal.findUniqueOrThrow({
+      where: {
+        id: data.id,
+      },
+    })
+
+    if (meal && meal.user_id === data.user_id) {
+      const updatedMeal = await prisma.meal.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          name: data.name,
+          description: data.description,
+          is_on_diet: data.is_on_diet,
+          created_at: data.created_at,
+        },
+      })
+
+      return updatedMeal
+    }
+    throw new ResourceNotFoundError()
+  }
+
   async delete({ id, user_id }: FindMeal) {
     const meal = await prisma.meal.findUniqueOrThrow({
       where: {
         id,
       },
-    })
-
-    console.log({
-      meal,
-      id,
-      user_id,
     })
 
     if (meal && meal.user_id === user_id) {

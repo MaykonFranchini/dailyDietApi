@@ -6,6 +6,7 @@ import { checkUserIdExists } from './middlewares/check-user-id-exists'
 import { listAllMealsController } from './controllers/list-all-meals'
 import { findMealController } from './controllers/find-meal'
 import { deleteMealController } from './controllers/delete-meal'
+import { updateMealController } from './controllers/update-meal'
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/users', createUserController)
@@ -18,4 +19,5 @@ export async function appRoutes(app: FastifyInstance) {
     { preHandler: [checkUserIdExists] },
     deleteMealController,
   )
+  app.put('/meals', { preHandler: [checkUserIdExists] }, updateMealController)
 }

@@ -15,7 +15,7 @@ describe('Delete meal use case', () => {
     sut = new DeleteMealUseCase(mealRepository)
   })
 
-  it('should be not able to delete user`s meal with invalid  meal id', async () => {
+  it('should not be able to delete user`s meal with invalid  meal id', async () => {
     await auxUseCase.execute({
       name: 'Meal',
       description: 'Meal test',
