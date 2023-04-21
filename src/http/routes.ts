@@ -7,6 +7,7 @@ import { listAllMealsController } from './controllers/list-all-meals'
 import { findMealController } from './controllers/find-meal'
 import { deleteMealController } from './controllers/delete-meal'
 import { updateMealController } from './controllers/update-meal'
+import { metricsController } from './controllers/metrics'
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/users', createUserController)
@@ -20,4 +21,5 @@ export async function appRoutes(app: FastifyInstance) {
     deleteMealController,
   )
   app.put('/meals', { preHandler: [checkUserIdExists] }, updateMealController)
+  app.get('/metrics', { preHandler: [checkUserIdExists] }, metricsController)
 }

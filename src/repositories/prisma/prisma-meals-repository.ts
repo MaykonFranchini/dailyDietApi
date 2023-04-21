@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client'
 import { FindMeal, MealsRepository } from '../meals-repository'
 import { prisma } from '../../services/prisma'
 import { ResourceNotFoundError } from '../../use-cases/errors/resource-not-found-error'
+import { bestSequenceOnDiet } from '../../utils/best-sequence-on-diet'
 
 export interface CreateMeal extends Prisma.MealCreateInput {
   user_id: string
@@ -13,6 +14,39 @@ export interface UpdateMeal extends Prisma.MealUpdateInput {
 }
 
 export class PrismaMealsRepository implements MealsRepository {
+  async metrics(user_id: string) {
+    const total_meals = await prisma.meal.count({
+      where: {
+        user_id,
+      },
+    })
+
+    const best = await prisma.meal.findMany({
+      where: {
+        user_id,
+      },
+      orderBy: {
+        created_at: 'asc',
+      },
+    })
+
+    const total_meals_on_diet = await prisma.meal.findMany({
+      where: {
+        user_id,
+        is_on_diet: true,
+      },
+    })
+
+    const s = bestSequenceOnDiet(best)
+
+    return {
+      total_meals,
+      total_meals_on_diet: total_meals_on_diet.length,
+      total_meals_off_diet: total_meals - total_meals_on_diet.length,
+      best_sequence_on_diet: s,
+    }
+  }
+
   async update(data: UpdateMeal) {
     const meal = await prisma.meal.findUniqueOrThrow({
       where: {
