@@ -37,13 +37,13 @@ export class PrismaMealsRepository implements MealsRepository {
       },
     })
 
-    const s = bestSequenceOnDiet(best)
+    const bestSequence = bestSequenceOnDiet(best)
 
     return {
       total_meals,
       total_meals_on_diet: total_meals_on_diet.length,
       total_meals_off_diet: total_meals - total_meals_on_diet.length,
-      best_sequence_on_diet: s,
+      best_sequence_on_diet: bestSequence,
     }
   }
 

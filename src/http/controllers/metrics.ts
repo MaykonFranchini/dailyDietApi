@@ -14,6 +14,7 @@ export async function metricsController(
     const metricsUseCase = new MetricsUseCase(mealRepository)
     metrics = await metricsUseCase.execute({ user_id })
   } catch (err) {
+    console.log(err)
     reply.status(500).send()
   }
 
