@@ -32,7 +32,7 @@ export function bestSequenceOnDiet(meals: Meal[]) {
   mealsByDate[currentDay] = currentDayMeals
 
   let sequence = 0
-  let bestDaySequence
+  let bestDaySequence: any
 
   // eslint-disable-next-line array-callback-return
   Object.keys(mealsByDate).map((key) => {
