@@ -2,7 +2,11 @@ import { Prisma } from '@prisma/client'
 import { FindMeal, MealsRepository } from '../meals-repository'
 import { prisma } from '../../services/prisma'
 import { ResourceNotFoundError } from '../../use-cases/errors/resource-not-found-error'
-import { bestSequenceOnDiet } from '../../utils/best-sequence-on-diet'
+
+interface BestSeuqenceData {
+  best_day: string
+  meals_on_diet: string
+}
 
 export interface CreateMeal extends Prisma.MealCreateInput {
   user_id: string
@@ -21,15 +25,6 @@ export class PrismaMealsRepository implements MealsRepository {
       },
     })
 
-    const best = await prisma.meal.findMany({
-      where: {
-        user_id,
-      },
-      orderBy: {
-        created_at: 'asc',
-      },
-    })
-
     const total_meals_on_diet = await prisma.meal.findMany({
       where: {
         user_id,
@@ -37,13 +32,25 @@ export class PrismaMealsRepository implements MealsRepository {
       },
     })
 
-    const bestSequence = bestSequenceOnDiet(best)
+    const result =
+      await prisma.$queryRaw`SELECT DATE(created_at) AS best_day, COUNT(meals.is_on_diet ) AS meals_on_diet
+    FROM meals
+    WHERE user_id = ${user_id} AND meals.is_on_diet = true
+    GROUP BY best_day`
+
+    const best_sequence = JSON.stringify(
+      result,
+      (key, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
+    )
+
+    const [best_sequence_on_diet]: BestSeuqenceData[] =
+      JSON.parse(best_sequence)
 
     return {
       total_meals,
       total_meals_on_diet: total_meals_on_diet.length,
       total_meals_off_diet: total_meals - total_meals_on_diet.length,
-      best_sequence_on_diet: bestSequence,
+      best_sequence_on_diet,
     }
   }
 
